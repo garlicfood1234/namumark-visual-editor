@@ -131,7 +131,7 @@ def convert():
         initialvalue=default_filename,
     )
     if filename_base is None:
-        messagebox.showerror("오류", "비정상 입력입니다.")
+        messagebox.showerror("오류", "비정상적인 입력입니다.")
         return
     filename_base = filename_base.strip()
     if not filename_base:
