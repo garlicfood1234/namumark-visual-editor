@@ -124,11 +124,33 @@ def convert():
 
     # 파일로 저장
     now = datetime.now()
-    filename = now.strftime("%Y%m%d%H%M%S") + ".txt"
+    default_filename = now.strftime("%Y%m%d%H%M%S")
+    filename_base = simpledialog.askstring(
+        "파일 이름",
+        "저장할 파일 이름을 입력하세요.",
+        initialvalue=default_filename,
+    )
+    if filename_base is None:
+        messagebox.showerror("오류", "비정상 입력입니다.")
+        return
+    filename_base = filename_base.strip()
+    if not filename_base:
+        messagebox.showerror("오류", "파일 이름을 입력해 주세요.")
+        return
+    if filename_base.lower().endswith(".txt"):
+        filename_base = filename_base[:-4]
+    filename = f"{filename_base}.txt"
     
     try:
-        with open(filename, "w", encoding="utf-8") as file:
-            file.write(formatted_text)
+        suffix = 0
+        while True:
+            try:
+                with open(filename, "x", encoding="utf-8") as file:
+                    file.write(formatted_text)
+                break
+            except FileExistsError:
+                suffix += 1
+                filename = f"{filename_base} ({suffix}).txt"
         messagebox.showinfo("알림", f"파일이 저장되었습니다\n\n파일 이름: {filename}")
     except Exception as e:
         messagebox.showerror("오류", f"파일 저장 중 오류가 발생했습니다. 오류 내용: \n\n{e}")
